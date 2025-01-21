@@ -20,7 +20,7 @@ currentIndex DWORD 0
 endIndex DWORD 0
 
 formatString BYTE "%f", 0    ; Format string for floating-point output
-buffer BYTE 256 DUP(0)       ; Buffer to hold formatted string
+buffer db 256 DUP(0)       ; Buffer to hold formatted string
 
 
 .code
@@ -37,6 +37,7 @@ start:
 
                              ; Print the string to stdout
  invoke StdOut, ADDR buffer
+ invoke StdIn, offset buffer, 256
 
 
 
