@@ -3,11 +3,11 @@ include \masm32\include\masm32rt.inc
 .data
  result  REAL8 0.0
  X   REAL4 -1.0, 1.2, 2.3, 3.4, 4.567, 0.0
-            SDWORD -1               ; End of array -> NaN
+            SDWORD -1         ; End of array -> NaN
  Y REAL4 -3.0, 1.7, 2.3, 13.4, 4.567, 0.2
-            SDWORD -1               ; End of array -> NaN
+            SDWORD -1        
  Yhat REAL4 -6.0, -1.9, 12.3, 3.4, 4.564, 0.5
-            SDWORD -1               ; End of array -> NaN   
+            SDWORD -1          
 
 sse REAL4 0.0      
 
@@ -28,15 +28,15 @@ buffer BYTE 256 DUP(0)       ; Buffer to hold formatted string
 
 start:
 
- mov esi, OFFSET Y    ; true y
- mov edi, OFFSET Yhat ; pred y
- mov ebx, 5           ; # of elements in array-1
+ mov esi, OFFSET Y           ; true y
+ mov edi, OFFSET Yhat        ; pred y
+ mov ebx, 5                  ; # of elements in array-1
  call compute_mse
 
- ; Convert REAL4 to string
+                             ; Convert REAL4 to string
  invoke sprintf, ADDR current_sum, ADDR formatString, current_sum
 
- ; Print the string to stdout
+                             ; Print the string to stdout
  invoke StdOut, ADDR buffer
 
 
@@ -47,7 +47,7 @@ compute_mse PROC
  ; ebx <- # of training examples (m)
  ; MSE -> current_sum memory buffer 
 
- fld 0.0              ; Clear memory buffers in case they have been set already
+ fld 0.0                     ; Clear memory buffers in case they have been set already
  fstp destination
  fld 0.0 
  fstp current_sum
