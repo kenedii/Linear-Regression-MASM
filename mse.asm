@@ -1,9 +1,11 @@
 include \masm32\include\masm32rt.inc
 
 .data
- result  REAL8 0.0
+ twom  REAL4 0.0
+ flzero  REAL4 0.0
+ flone   REAL4 1.0
  X   REAL4 -1.0, 1.2, 2.3, 3.4, 4.567, 0.0
-            SDWORD -1         ; End of array -> NaN
+            SDWORD -1        ; End of array -> NaN
  Y REAL4 -3.0, 1.7, 2.3, 13.4, 4.567, 0.2
             SDWORD -1        
  Yhat REAL4 -6.0, -1.9, 12.3, 3.4, 4.564, 0.5
@@ -11,14 +13,11 @@ include \masm32\include\masm32rt.inc
 
 sse REAL4 0.0      
 
-hi  REAL4 3.14
-bye REAL4 2.71
-
 destination REAL4 0.0
 current_sum REAL4 0.0
 
-currentIndex dd 0
-endIndex dd 0
+currentIndex DWORD 0
+endIndex DWORD 0
 
 formatString BYTE "%f", 0    ; Format string for floating-point output
 buffer BYTE 256 DUP(0)       ; Buffer to hold formatted string
@@ -34,7 +33,7 @@ start:
  call compute_mse
 
                              ; Convert REAL4 to string
- invoke sprintf, ADDR current_sum, ADDR formatString, current_sum
+ invoke wsprintf, ADDR buffer, ADDR formatString, current_sum
 
                              ; Print the string to stdout
  invoke StdOut, ADDR buffer
@@ -47,13 +46,13 @@ compute_mse PROC
  ; ebx <- # of training examples (m)
  ; MSE -> current_sum memory buffer 
 
- fld 0.0                     ; Clear memory buffers in case they have been set already
+ fld flzero           ; Clear memory buffers in case they have been set already
  fstp destination
- fld 0.0 
+ fld flzero
  fstp current_sum
- fld 0.0
+ fld flzero
  fstp sse
- fld 0.0
+ fld flzero
  fstp currentIndex
 
  mov endIndex, ebx
@@ -85,15 +84,16 @@ loopy:                ; compute squared error for every item in the array
   fld current_sum
   fstp sse            ; Store the sse in memory (we need it for Derivative during Gradient Descent)
 
-  imul ebx, 2         ; compute 2m
+  imul ebx, ebx, 2    ; compute 2m
+  mov twom, ebx
 
   finit
-  fld ebx
-  fld 1.0
+  fild twom
+  fld flone
   fdiv                ; compute 1/2m
   fld current_sum
-  fmul ; compute (1/2m)*(sse) where sse = sum( [y-yhat]^2 ) over all examples
-  fstp current_sum ; store the final SSE
+  fmul                ; compute (1/2m)*(sse) where sse = sum( [y-yhat]^2 ) over all examples
+  fstp current_sum    ; store the final SSE
   
 
  ret
