@@ -1,7 +1,7 @@
 include \masm32\include\masm32rt.inc
 
 .data
- twom  REAL4 0.0
+ twom  DWORD 0
  flzero  REAL4 0.0
  flone   REAL4 1.0
  X   REAL4 -1.0, 1.2, 2.3, 3.4, 4.567, 0.0
@@ -22,6 +22,7 @@ endIndex DWORD 0
 formatString BYTE "%f", 0    ; Format string for floating-point output
 buffer db 256 DUP(0)       ; Buffer to hold formatted string
 
+current_sum_qword QWORD 0 ; QWORD buffer for FloatToStr
 
 .code
 
@@ -29,15 +30,23 @@ start:
 
  mov esi, OFFSET Y           ; true y
  mov edi, OFFSET Yhat        ; pred y
- mov ebx, 5                  ; # of elements in array-1
+ mov ebx, 6                  ; # of elements in array-1
  call compute_mse
 
-                             ; Convert REAL4 to string
- invoke wsprintf, ADDR buffer, ADDR formatString, current_sum
+; Convert REAL4 current_sum to QWORD
+    fld current_sum
+    fstp current_sum_qword      ; Store the REAL4 value into the QWORD buffer
 
-                             ; Print the string to stdout
- invoke StdOut, ADDR buffer
- invoke StdIn, offset buffer, 256
+
+    ; Use FloatToStr to convert current_sum to a string
+    invoke FloatToStr, current_sum_qword, ADDR buffer
+
+    ; Print the ASCII result to stdout
+    invoke StdOut, ADDR buffer
+
+    ; Wait for user input before exiting
+    invoke StdIn, OFFSET buffer, 256
+    ret
 
 
 
@@ -76,7 +85,9 @@ loopy:                ; compute squared error for every item in the array
  fadd current_sum
  fstp current_sum
 
- inc currentIndex     ; Increment the current index by one
+ mov eax, currentIndex
+ inc eax              ; Increment the current index by one
+ mov currentIndex, eax
  jmp loopy            ; Continue the loop
  
  
