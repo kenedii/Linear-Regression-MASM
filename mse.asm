@@ -24,6 +24,8 @@ buffer db 256 DUP(0)       ; Buffer to hold formatted string
 
 current_sum_qword QWORD 0 ; QWORD buffer for FloatToStr
 
+newline db " ",13,10,0
+
 .code
 
 start:
@@ -35,6 +37,17 @@ start:
 
 ; Convert REAL4 current_sum to QWORD
     fld current_sum
+    fstp current_sum_qword      ; Store the REAL4 value into the QWORD buffer
+
+
+    ; Use FloatToStr to convert current_sum to a string
+    invoke FloatToStr, current_sum_qword, ADDR buffer
+
+    ; Print the ASCII result to stdout
+    invoke StdOut, ADDR buffer
+
+; Convert REAL4 current_sum to QWORD
+    fld sse
     fstp current_sum_qword      ; Store the REAL4 value into the QWORD buffer
 
 
@@ -100,8 +113,8 @@ loopy:                ; compute squared error for every item in the array
   mov twom, ebx
 
   finit
-  fild twom
   fld flone
+  fild twom
   fdiv                ; compute 1/2m
   fld current_sum
   fmul                ; compute (1/2m)*(sse) where sse = sum( [y-yhat]^2 ) over all examples
