@@ -88,6 +88,32 @@ compute_se PROC      ; compute se  =  [y-yhat]^2
 ret
 compute_se ENDP
 
+compute_dse PROC
+ ; eax <-- Value of x[i] (current training example)
+ ; ebx <-- are we calcing deriv w.r.t bias or weight? 0 = bias 1 = weight
+ ; gradient --> gradient memory buffer
+ 
+ mov example_x, eax
+
+ fld flzero
+ fstp gradient    ; reset gradient memory buf
+
+ fld fltwo
+ fld sse          ; -2*squared_error
+ fmul
+
+ cmp ebx, 0       ; If we are computing deriv w.r.t
+ je fin           ; bias, we skip the next steps
+ 
+ fild example_x
+ fmul
+
+fin:
+ fstp gradient
+ 
+ ret
+compute_dse ENDP
+
 compute_mse PROC          ; compute (1/2m)*(sse) where sse = sum( [y-yhat]^2 ) over all examples
  ; esi <- pointer to y
  ; edi <- pointer to yhat
@@ -146,32 +172,5 @@ loopy:                ; compute squared error for every item in the array
 
  ret
 compute_mse ENDP
-
-
-compute_dse PROC
- ; eax <-- Value of x[i] (current training example)
- ; ebx <-- are we calcing deriv w.r.t bias or weight? 0 = bias 1 = weight
- ; gradient --> gradient memory buffer
- 
- mov example_x, eax
-
- fld flzero
- fstp gradient    ; reset gradient memory buf
-
- fld fltwo
- fld sse          ; -2*squared_error
- fmul
-
- cmp ebx, 0       ; If we are computing deriv w.r.t
- je fin           ; bias, we skip the next steps
- 
- fild example_x
- fmul
-
-fin:
- fstp gradient
- 
- ret
-compute_dse ENDP
 
 end start

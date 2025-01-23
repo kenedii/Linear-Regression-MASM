@@ -3,10 +3,10 @@ include \masm32\include\masm32rt.inc
 
 .data
 
-x REAL4 0.0
-w REAL4 0.0
-b REAL4 0
-yhat REAL4 0 
+trx REAL4 0.0 ; value of training example x
+pw REAL4 0.0  ; Parameter W
+pb REAL4 0.0  ; Parameter B
+yhat REAL4 0.0  ; Value of wx+b
 
 .code
 
@@ -18,14 +18,14 @@ feedforward PROC ; Feed forward for a single training example
 ; lea ecx <-- b
 ; yhat/ypred --> yhat
 
- mov x, eax
- mov w, ebx
- mov b, ecx
+ mov trx, eax
+ mov pw, ebx
+ mov pb, ecx
 
- fld w
- fld x
+ fld pw
+ fld trx
  fmul
- fld b
+ fld pb
  fadd
  fstp yhat
 

@@ -4,11 +4,6 @@ include \masm32\include\masm32rt.inc
 
 .data
 
-x DWORD 0
-w DWORD 0
-b DWORD 0
-
-
 update_size REAL4 0.0
 flzero REAL4 0.0
 new_w REAL4 0.0
