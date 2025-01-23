@@ -8,7 +8,7 @@ yhat REAL4 0.0  ; Value of wx+b
 
 .code
 
-feedforward PROC ; Feed forward for a single training example
+feed_forward PROC ; Feed forward for a single training example
 ; lea eax <-- x             Memory addresses need to be loaded because registers cannot store REAL4 
 ; lea ebx <-- w
 ; lea ecx <-- b
@@ -26,4 +26,4 @@ feedforward PROC ; Feed forward for a single training example
  fstp yhat
 
  ret
-feedforward ENDP
+feed_forward ENDP
