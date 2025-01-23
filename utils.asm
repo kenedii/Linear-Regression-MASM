@@ -5,13 +5,17 @@ bufferfloatascii db 256 DUP(0)       ; Buffer to hold formatted string
 floatqword QWORD 0
 space db " ",0
 
+floattempbuf REAL4 0.0
+
 .code
 
 printfloat PROC
 ; eax <-- float
 
+ mov floattempbuf, eax
+
 ; Convert REAL4 current_sum to QWORD
-    fld [eax]
+    fld floattempbuf
     fstp floatqword       ; Store the REAL4 value into the QWORD buffer
 
 
@@ -19,7 +23,7 @@ printfloat PROC
     invoke FloatToStr,floatqword , ADDR bufferfloatascii 
 
     ; Print the ASCII result to stdout
-    invoke StdOut, ADDR buffer
+    invoke StdOut, ADDR bufferfloatascii 
     
     invoke StdOut, offset space
 
