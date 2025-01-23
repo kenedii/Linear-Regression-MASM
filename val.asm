@@ -30,7 +30,7 @@ create_yhat_array PROC
         lea ecx, b               ; Address of bias b
 
         ; Call the feedforward procedure
-        call feedforward         ; feedforward computes and stores result in yhat
+        call feed_forward         ; feedforward computes and stores result in yhat
 
         ; Move the result from yhat to Yhats
         lea esi, yhat            ; Address of yhat
