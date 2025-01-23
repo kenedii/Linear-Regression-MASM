@@ -1,3 +1,10 @@
+include \masm32\include\masm32rt.inc
+include feedforward.asm
+include mse.asm
+include updateparam.asm
+include val.asm
+include utils.asm
+
 .data
 
 prompt1 DB "Beginning training. . .",13,10,0
@@ -7,14 +14,15 @@ prompt4 DB "b: ",0
 prompt5 DB "MSE: ",0
 prompt6 DB "Best Epoch: ",0
 prompt7 DB "Current Epoch: ",0
+prompt8 DB "Training complete. num_epochs reached. ",13,10,0
 newline " ",13,10,0
 
 num_epochs       DWORD 0
 learning_rate    REAL4 0.0
 
-X   REAL4 -1.0, 1.2, 2.3, 3.4, 4.567, 0.0
+X   REAL4 1.0, 2.2, 3.3, 4.4, 5.567, 6.0
             SDWORD -1        ; End of array -> NaN
-Y REAL4 -3.0, 1.7, 2.3, 13.4, 4.567, 0.2
+Y REAL4 2.0, 4.7, 6.3, 8.4, 10.567, 12.2
             SDWORD -1      
             
 num_examples DWORD 0
@@ -35,11 +43,20 @@ extrabuffer DB 256dup(?)
 
 start:
 
+call train_model
+
+push 256
+push offset extrabuffer
+call StdIn
 
 
 train_model PROC
 
- ; initialize random parameters w,b
+ ; to do: initialize random parameters w,b
+ mov w, 1
+ mov b, 1
+
+ Invoke StdOut, offset prompt1
 
  epoch_loop:
   mov eax, current_epoch 
@@ -166,7 +183,20 @@ train_model PROC
 
 finish_training:
  
- 
+ Invoke StdOut, offset newline
+ Invoke StdOut, offset newline
+ Invoke StdOut, offset prompt8 ; Training complete. num_epochs reached. 
+ Invoke StdOut, offset prompt6 ; Best
+ Invoke StdOut, offset prompt5 ; MSE:
+ lea eax, best_mse
+ call printfloat
+ Invoke StdOut, offset prompt3 ; w:
+ lea eax, best_w
+ call printfloat
+ Invoke StdOut, offset prompt4 ; b:
+ lea eax, best_b
+ call printfloat
+ Invoke StdOut, offset newline
   
 
 
