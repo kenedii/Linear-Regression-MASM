@@ -8,6 +8,8 @@ Yhats  REAL4 ? ; Buffer to store predictions
 
 index  DWORD 0                    ; Index to track the position in the X array
 
+nanValue SDWORD -1
+
 .code
 
 create_yhat_array PROC
