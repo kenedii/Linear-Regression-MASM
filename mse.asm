@@ -3,16 +3,7 @@
 ; - Derivative of squared error (gradient)
 ; - Mean Squared Error
 
-include \masm32\include\masm32rt.inc
-
 .data
-
- X   REAL4 -1.0, 1.2, 2.3, 3.4, 4.567, 0.0
-            SDWORD -1        ; End of array -> NaN
- Y REAL4 -3.0, 1.7, 2.3, 13.4, 4.567, 0.2
-            SDWORD -1        
- Yhat REAL4 -6.0, -1.9, 12.3, 3.4, 4.564, 0.5
-            SDWORD -1  
 
 flzero  REAL4 0.0
 flone   REAL4 1.0
