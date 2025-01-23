@@ -1,3 +1,8 @@
+; Procedures to compute:
+; - Squared error for a single feed forward
+; - Derivative of squared error (gradient)
+; - Mean Squared Error
+
 include \masm32\include\masm32rt.inc
 
 .data
@@ -9,9 +14,9 @@ include \masm32\include\masm32rt.inc
  Yhat REAL4 -6.0, -1.9, 12.3, 3.4, 4.564, 0.5
             SDWORD -1  
 
- flzero  REAL4 0.0
- flone   REAL4 1.0
- fltwo   REAL4 -2.0        
+flzero  REAL4 0.0
+flone   REAL4 1.0
+fltwo   REAL4 -2.0        
 
 sse REAL4 0.0   
 gradient REAL4 0.0   

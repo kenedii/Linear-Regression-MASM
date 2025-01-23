@@ -3,29 +3,29 @@ include \masm32\include\masm32rt.inc
 
 .data
 
-x DWORD 0
-w DWORD 0
-b DWORD 0
-yhat DWORD 0 
+x REAL4 0.0
+w REAL4 0.0
+b REAL4 0
+yhat REAL4 0 
 
 .code
 
 start:
 
 feedforward PROC ; Feed forward for a single training example
-; eax <-- x
-; ebx <-- w
-; ecx <-- b
+; lea eax <-- x             Memory addresses need to be loaded because registers cannot store REAL4 
+; lea ebx <-- w
+; lea ecx <-- b
 ; yhat/ypred --> yhat
 
  mov x, eax
  mov w, ebx
  mov b, ecx
 
- fild w
- fild w
+ fld w
+ fld x
  fmul
- fild b
+ fld b
  fadd
  fstp yhat
 
