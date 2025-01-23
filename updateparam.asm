@@ -1,6 +1,5 @@
 ; Updates parameters w and b
 ; By using learning rate and gradient
-include \masm32\include\masm32rt.inc
 
 .data
 
@@ -11,8 +10,6 @@ new_b REAL4 0.0
 
 
 .code
-
-start:
 
 update_weight PROC
 ; lea eax <-- current weight
@@ -57,5 +54,3 @@ update_bias PROC
  
  ret
 update_bias ENDP
-
-end start

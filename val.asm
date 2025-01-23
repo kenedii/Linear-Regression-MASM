@@ -1,6 +1,5 @@
 ; After forward passing every training example for the epoch,
 ; Every example will be run through model again with newest w,b to find MSE
-include feedforward.asm
 
 .data
 
@@ -10,8 +9,6 @@ Yhats  REAL4 ? ; Buffer to store predictions
 index  DWORD 0                    ; Index to track the position in the X array
 
 .code
-
-start:
 
 create_yhat_array PROC
     ; Iterate through X until the end of the array is hit
@@ -51,7 +48,3 @@ create_yhat_array PROC
         mov DWORD PTR [edx], -1  ; Terminate with NaN
         ret
 create_yhat_array ENDP
- 
-
-
-end start

@@ -18,37 +18,13 @@ current_sum REAL4 0.0
 twom  DWORD 0
 currentIndex DWORD 0
 endIndex DWORD 0
-current_sum_qword QWORD 0 ; QWORD buffer for FloatToStr
 example_x DWORD 0
 
 
-newline db " ",13,10,0
-formatString BYTE "%f", 0    ; Format string for floating-point output
-buffer db 256 DUP(0)       ; Buffer to hold formatted string
 
 .code
 
-start:
 
- mov esi, OFFSET Y           ; true y
- mov edi, OFFSET Yhat        ; pred y
- mov ebx, 6                  ; # of elements in array-1
- call compute_mse
-
-; Convert REAL4 current_sum to QWORD
-    fld current_sum
-    fstp current_sum_qword      ; Store the REAL4 value into the QWORD buffer
-
-
-    ; Use FloatToStr to convert current_sum to a string
-    invoke FloatToStr, current_sum_qword, ADDR buffer
-
-    ; Print the ASCII result to stdout
-    invoke StdOut, ADDR buffer
-
-    ; Wait for user input before exiting
-    invoke StdIn, OFFSET buffer, 256
-    ret
 
 compute_se PROC      ; compute se  =  [y-yhat]^2 
  ; esi <- y
@@ -163,5 +139,3 @@ loopy:                ; compute squared error for every item in the array
 
  ret
 compute_mse ENDP
-
-end start
