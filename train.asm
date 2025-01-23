@@ -4,6 +4,9 @@ include mse.asm
 include updateparam.asm
 include val.asm
 include utils.asm
+.686p
+.mmx
+.xmm
 
 .data
 
@@ -15,17 +18,17 @@ prompt5 DB "MSE: ",0
 prompt6 DB "Best Epoch: ",0
 prompt7 DB "Current Epoch: ",0
 prompt8 DB "Training complete. num_epochs reached. ",13,10,0
-newline " ",13,10,0
+newline DB " ",13,10,0
 
-num_epochs       DWORD 0
+num_epochs       DWORD 50
 learning_rate    REAL4 0.0
 
-X   REAL4 1.0, 2.2, 3.3, 4.4, 5.567, 6.0
+X   REAL4 -1.0, 2.2, 3.3, 4.4, 5.567, 6.0
             SDWORD -1        ; End of array -> NaN
-Y REAL4 2.0, 4.7, 6.3, 8.4, 10.567, 12.2
+Y   REAL4 -2.0, 4.7, 6.3, 8.4, 10.567, 12.2
             SDWORD -1      
             
-num_examples DWORD 0
+num_examples DWORD 6
 current_epoch DWORD 0
 w REAL4 0.0
 b REAL4 0.0
@@ -37,7 +40,7 @@ current_mse REAL4 0.0
 
 txIndex DWORD 0 ; what training example we are on
 
-extrabuffer DB 256dup(?)
+extrabuffer DB 256 dup(?)
 
 .code
 
@@ -199,7 +202,7 @@ finish_training:
  Invoke StdOut, offset newline
   
 
-
+ ret
 train_model ENDP
 
 print_epoch_stats PROC
@@ -207,7 +210,7 @@ print_epoch_stats PROC
  Invoke StdOut, offset prompt2 ; Epoch
  mov eax, current_epoch
  add eax, 1
- lea edi extrabuffer
+ lea edi, extrabuffer
  Invoke StdOut, offset extrabuffer ; #
  Invoke StdOut, offset newline
  Invoke StdOut, offset prompt7 ; Current
