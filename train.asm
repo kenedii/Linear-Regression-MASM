@@ -182,6 +182,9 @@ train_model PROC
     fstp current_mse
 
     call print_epoch_stats
+    mov eax, current_epoch
+    inc eax
+    mov current_epoch, eax ; increment the current epoch count
     jmp epoch_loop   ; Start the next epoch
 
 finish_training:
@@ -193,6 +196,7 @@ finish_training:
  Invoke StdOut, offset prompt5 ; MSE:
  lea eax, best_mse
  call printfloat
+ ;Invoke StdOut, offset newline
  Invoke StdOut, offset prompt3 ; w:
  lea eax, best_w
  call printfloat
