@@ -45,6 +45,8 @@ compute_se PROC      ; compute se  =  [y-yhat]^2
  fld REAL4 PTR [esi]
  fld REAL4 PTR [edi]
  fsub                 ; compute y-yhat
+ fstp sse
+ fld sse
  fld st(0)            ; duplicate the result on the FPU stack
  fmul                 ; compute (y-yhat)^2
 
@@ -60,7 +62,6 @@ compute_dse PROC
  ; ebx <-- are we calcing deriv w.r.t bias or weight? 0 = bias 1 = weight
  ; gradient --> gradient memory buffer
  
- mov example_x, eax
 
  fld flzero
  fstp gradient    ; reset gradient memory buf
@@ -68,15 +69,17 @@ compute_dse PROC
  fld fltwo
  fld sse          ; -2*squared_error
  fmul
+ fstp gradient
 
  cmp ebx, 0       ; If we are computing deriv w.r.t
  je fin           ; bias, we skip the next steps
- 
- fild example_x
+
+ fld gradient
+ fld REAL4 PTR [eax]
  fmul
+ fstp gradient
 
 fin:
- fstp gradient
  
  ret
 compute_dse ENDP

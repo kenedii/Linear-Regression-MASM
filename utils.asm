@@ -7,25 +7,29 @@ space db " ",0
 
 floattempbuf REAL4 0.0
 
+
+prng_x  DD 0 ; calculation state
+prng_a  DD 1099433 ; current seed
+randnum DD 0
+randfloat REAL4 0.0
+
 .code
 
 printfloat PROC
 ; eax <-- float
 
- mov floattempbuf, eax
-
 ; Convert REAL4 current_sum to QWORD
-    fld floattempbuf
+    fld real4 ptr [eax]
     fstp floatqword       ; Store the REAL4 value into the QWORD buffer
 
-
-    ; Use FloatToStr to convert current_sum to a string
+    ; Use FloatToStr to convert floatqword to a string
     invoke FloatToStr,floatqword , ADDR bufferfloatascii 
 
     ; Print the ASCII result to stdout
-    invoke StdOut, ADDR bufferfloatascii 
+    invoke StdOut, addr bufferfloatascii 
     
     invoke StdOut, offset space
+    ret
 
 printfloat ENDP
 
@@ -53,3 +57,41 @@ load_digits:
  ret
 
 to_string ENDP
+
+fPrngGet PROC range:DWORD ; Generate a pseudo-random floating point number in range 0,range
+    ; Returns eax = memory address of floating point pseudorandom number
+
+    ; count the number of cycles since
+    ; the machine has been reset
+    invoke GetTickCount
+
+    ; accumulate the value in eax and manage
+    ; any carry-spill into the x state var
+    adc eax, edx
+    adc eax, prng_x
+
+    ; multiply this calculation by the seed
+    mul prng_a
+
+    ; manage the spill into the x state var
+    adc eax, edx
+    mov prng_x, eax
+
+    ; put the calculation in range of what
+    ; was requested
+    mul range
+
+    ; ranged-random value in eax
+    mov eax, edx
+    mov randnum, eax
+    fild randnum   ; load rand int in range onto fpu
+    fstp randfloat ; store it as floating point in memory
+
+    mov eax, prng_a
+    inc eax ; increment the seed
+    mov prng_a, eax
+    
+    lea eax, randfloat
+    ret
+
+fPrngGet ENDP
