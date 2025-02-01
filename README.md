@@ -1,12 +1,20 @@
 # Linear-Regression-MASM
 
-Simple linear regression model training with 1 X feature variable using MASM32 x86 assembly.
+Simple linear regression model using Stochastic Gradient Descent and training with 1 X feature (independent variable) made using MASM32 x86 assembly.
+
+Minimum processor Pentium Pro or better [(.686p)](https://learn.microsoft.com/en-us/cpp/assembler/masm/dot-686p?view=msvc-170)
+
+To do:
+
+- Batch Gradient Descent
+
+- Logistic Regression w/ Sigmoid
 
 Files:
 
 **train.asm**
 
-Specify X, Y, num_epochs, learning_rate, num_examples and train a LR model using train_model PROC.
+Specify X, Y, num_epochs, learning_rate, num_examples and train a LR model by calling train_model PROC.
 
 **feedforward.asm**
 
