@@ -1,9 +1,6 @@
 ; Computes yhat = wx + b for a training example x
 .data
 
-trx REAL4 0.0 ; value of training example x
-pw REAL4 0.0  ; Parameter W
-pb REAL4 0.0  ; Parameter B
 yhat REAL4 0.0  ; Value of wx+b
 
 .code
@@ -14,15 +11,10 @@ feed_forward PROC ; Feed forward for a single training example
 ; lea ecx <-- b
 ; yhat/ypred --> yhat
 
- mov trx, eax
- mov pw, ebx
- mov pb, ecx
 
- fld pw
- fld trx
- fmul
- fld pb
- fadd
+ fld real4 ptr [eax]
+ fmul real4 ptr [ebx]
+ fadd real4 ptr [ecx]
  fstp yhat
 
  ret
