@@ -142,7 +142,7 @@ finish_epoch:
  fstp st(0)                  ; Remove ST(0) (best_mse)
  fstp st(0)                  ; Remove ST(0) (current_sum)
 
- jge update_best_mse         ; Jump if less (if we got a lower mse this time)
+ jge update_best_mse         ; Jump if best mse is greater than current mse (if we got a lower mse this time)
  jmp done                    ; Skip to done
 
 update_best_mse:
