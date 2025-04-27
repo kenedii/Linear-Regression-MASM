@@ -4,6 +4,8 @@ A **simple linear regression model** built using **Stochastic Gradient Descent**
 
 🔧 **Minimum Processor**: Pentium Pro or better [(.686p)](https://learn.microsoft.com/en-us/cpp/assembler/masm/dot-686p?view=msvc-170)
 
+Implemented using a scaled housing prices dataset [from Kaggle](https://www.kaggle.com/datasets/yasserh/housing-prices-dataset/data), 
+
 ---
 
 ## 🚧 To-Do:
