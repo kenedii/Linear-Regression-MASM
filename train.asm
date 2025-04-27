@@ -10,12 +10,12 @@ include utils.asm
 .xmm
 
 .data
-; Training Data
-X REAL4 3.0, 2.2, 3.3, 4.4, 5.567, 6.0        ; End of array -> NaN
-Y REAL4 2.0, 4.7, 6.3, 8.4, 10.567, 12.2  
+; Training Data - example sqft/house_price data from kaggle, data scaled -1 to 1 range
+X REAL4 -1.0, 0.21259843, 1.0, -0.93700787, -1.0, -0.93700787        ; End of array
+Y REAL4  1.0, 0.14285714, 0.14285714, 0.11428571, -0.54285714, -1.0
 ; Hyperparameters
 num_examples DWORD 6
-num_epochs DWORD 25000
+num_epochs DWORD 100
 learning_rate REAL4 0.01
 
 prompt1 DB "Beginning training. . .",13,10,0
@@ -142,7 +142,7 @@ finish_epoch:
  fstp st(0)                  ; Remove ST(0) (best_mse)
  fstp st(0)                  ; Remove ST(0) (current_sum)
 
- jge update_best_mse         ; Jump if best mse is greater than current mse (if we got a lower mse this time)
+ jge update_best_mse         ; Jump if less (if we got a lower mse this time)
  jmp done                    ; Skip to done
 
 update_best_mse:
